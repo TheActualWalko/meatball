@@ -1,0 +1,6 @@
+- If you have to get the product URLs again, look at getUrls.js as a starting point. BUT - look in /urls first. Odds are, just about everything you want is in there.
+
+- All the data from Ikea's JS blobs is in scraping/data/ikea.json
+- run scraping/clean.js (from inside scraping/) to build a nicer representation of the same data with a lot of the crap taken out
+- then, run scraping/dedupe.js (from inside scraping/) to remove any items with the same name and dimensions
+- scraping/dedupe.js overwrites ikea-clean-deduped in the public.js folder.

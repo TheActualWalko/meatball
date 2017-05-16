@@ -1,0 +1,3 @@
+- Compare view
+- Better search/sort
+- Graphs to help explore a particular subject or pair of axes
