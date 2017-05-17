@@ -153,7 +153,6 @@ window.addEventListener("mousemove", (evt)=>{
   ) {
     if (isClicked) {
       if (!currentClickDirection) {
-        console.log(currentClickStartX, x, currentClickStartZ, z);
         if (x === currentClickStartX && z === currentClickStartZ) {
           // noop
         } else if (x !== currentClickStartX) {
@@ -166,10 +165,14 @@ window.addEventListener("mousemove", (evt)=>{
       const maybeLockedZ = currentClickDirection === "z" ? z : currentClickStartZ;
       mousePlane.position.x = maybeLockedX;
       mousePlane.position.z = maybeLockedZ;
-      if (isAdding) {
-        addWall(maybeLockedX, maybeLockedZ);
-      } else {
-        removeWall(maybeLockedX, maybeLockedZ);
+      if (currentClickDirection === "x") {
+        for (let i = Math.min(x, currentClickStartX); i <= Math.max(x, currentClickStartX); i ++){
+          isAdding ? addWall(i, maybeLockedZ) : removeWall(i, maybeLockedZ);
+        }
+      } else if (currentClickDirection === "z") {
+        for (let i = Math.min(z, currentClickStartZ); i <= Math.max(z, currentClickStartZ); i ++){
+          isAdding ? addWall(maybeLockedX, i) : removeWall(maybeLockedX, i);
+        }
       }
       fadeAllWalls();
     } else {
