@@ -4,5 +4,7 @@ scraping/data/*
 public/three.js
 public/d3.v4.min.js
 public/ikea-clean-deduped.js.gz
-config.codekit3
 public/ikea-clean-deduped.js
+public/node_modules
+public/dist
+config.codekit3
