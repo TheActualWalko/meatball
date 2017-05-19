@@ -13,7 +13,7 @@ window.addEventListener("resize", ()=>{
 
 store.subscribe((...args)=>{
   const state = store.getState();
-  grid.draw(state);
+  grid.update(state);
 });
 
 store.dispatch({type: "test"});

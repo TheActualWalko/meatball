@@ -6,7 +6,8 @@ class Renderer {
     this.camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
 
     this.camera.position.y = 18;
-    this.camera.position.z = 11;
+    this.camera.position.z = 27;
+    this.camera.position.x = 16;
     this.camera.rotation.x = -1.2;
 
     this.driver = new THREE.WebGLRenderer({ antialias: true });
