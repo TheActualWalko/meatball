@@ -12,8 +12,8 @@ const context = canvas.getContext('2d');
 // draw gradient
 context.rect(0, 0, size, size);
 const gradient = context.createLinearGradient(0, size, 0, 0);
-gradient.addColorStop(0, '#ffffff');
-gradient.addColorStop(0.5, '#000000');
+gradient.addColorStop(0, '#5186fc');
+gradient.addColorStop(0.5, '#000');
 context.fillStyle = gradient;
 context.fill();
 
