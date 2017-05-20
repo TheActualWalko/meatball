@@ -1,10 +1,9 @@
 import * as THREE from "three";
-import whiteToBlackGradient from "./white-to-black-gradient";
-
+import whiteToBlackGradient from "./blue-to-black-gradient";
 const floorGeometry = new THREE.BoxGeometry(1, 20, 1, 1);
 const floorMaterial = new THREE.MeshBasicMaterial({ map: whiteToBlackGradient });
-floorGeometry.faceVertexUvs[0][6] = [new THREE.Vector2(0,0), new THREE.Vector2(0,0), new THREE.Vector2(0,0)];
-floorGeometry.faceVertexUvs[0][7] = [new THREE.Vector2(0,0), new THREE.Vector2(0,0), new THREE.Vector2(0,0)];
+floorGeometry.faceVertexUvs[0][6] = [new THREE.Vector2(0.1,0.1), new THREE.Vector2(0.1,0.1), new THREE.Vector2(0.1,0.1)];
+floorGeometry.faceVertexUvs[0][7] = [new THREE.Vector2(0.1,0.1), new THREE.Vector2(0.1,0.1), new THREE.Vector2(0.1,0.1)];
 
 
 class Floor {
@@ -18,7 +17,7 @@ class Floor {
       this.contents[this.serialize({x,z})] = mesh;
       mesh.position.x = x;
       mesh.position.z = z;
-      mesh.position.y = -10;
+      mesh.position.y = -9.98;
       mesh.rotation.x = Math.PI;
       this.grid.scene.add(mesh);
     }
