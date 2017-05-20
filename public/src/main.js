@@ -1,27 +1,46 @@
-import store from "./state/store";
-import Renderer from "./view/renderer";
+import View from "./view/view";
+import Cursor from "./view/cursor";
 import Grid from "./view/grid";
 import Walls from "./view/walls";
 
-const initialState = store.getState();
+const mainView = new View(document.body, window.innerWidth, window.innerHeight);
+const grid   = new Grid(mainView.scene, 32, 32);
+const cursor = new Cursor(grid);
+const walls  = new Walls(grid);
 
-const mainRenderer = new Renderer(document.body, window.innerWidth, window.innerHeight);
-const grid = new Grid(mainRenderer.scene, initialState.getIn(["grid", "width"]), initialState.getIn(["grid", "depth"]));
-const walls = new Walls(mainRenderer.scene);
-
-mainRenderer.run();
+mainView.run();
 
 window.addEventListener("resize", ()=>{
-  mainRenderer.setDimensions(window.innerWidth, window.innerHeight);
+  mainView.setDimensions(window.innerWidth, window.innerHeight);
 });
 
-window.addEventListener("mousemove", evt => grid.updateCursor(evt, mainRenderer.camera));
-window.addEventListener("mousedown", evt => {
-  console.log(grid.getMousePosition(evt, mainRenderer.camera));
-});
+let mouseIsDown = false;
+let isAdding = false;
 
-store.subscribe((...args)=>{
-  const state = store.getState();
-});
+window.addEventListener(
+  "mousemove",
+  evt => {
+    const pos = grid.getMousePosition(evt, mainView.camera);
+    cursor.update(pos);
+    if (mouseIsDown && grid.isOnGrid(pos)) {
+      isAdding ? walls.add(pos) : walls.remove(pos);
+    }
+  }
+);
 
-store.dispatch({type: "test"});
+window.addEventListener(
+  "mousedown", 
+  evt => {
+    mouseIsDown = true;
+    const pos = grid.getMousePosition(evt, mainView.camera);
+    isAdding = !walls.get(pos);
+    isAdding ? walls.add(pos) : walls.remove(pos);
+  }
+);
+
+window.addEventListener(
+  "mouseup", 
+  evt => {
+    mouseIsDown = false;
+  }
+);
