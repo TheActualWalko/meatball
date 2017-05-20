@@ -1,34 +1,26 @@
 import * as THREE from "three";
 
 
-function generateTexture() {
+const size = 512;
 
-  var size = 512;
+// create canvas
+const canvas = document.createElement('canvas');
+canvas.width = size;
+canvas.height = size;
 
-  // create canvas
-  var canvas = document.createElement( 'canvas' );
-  canvas.width = size;
-  canvas.height = size;
+// get context
+const context = canvas.getContext('2d');
 
-  // get context
-  var context = canvas.getContext( '2d' );
+// draw gradient
+context.rect(0, 0, size, size);
+const gradient = context.createLinearGradient(0, size, 0, 0);
+gradient.addColorStop(0, '#ffffff');
+gradient.addColorStop(1, 'transparent');
+context.fillStyle = gradient;
+context.fill();
 
-  // draw gradient
-  context.rect( 0, 0, size, size );
-  var gradient = context.createLinearGradient( 0, size, 0, 0 );
-  gradient.addColorStop(0, '#ffffff');
-  gradient.addColorStop(1, 'transparent');
-  context.fillStyle = gradient;
-  context.fill();
-
-  return canvas;
-
-}
-
-var texture = new THREE.Texture( generateTexture() );
-texture.needsUpdate = true; // important!
-
-
+const texture = new THREE.Texture(canvas);
+texture.needsUpdate = true;
 
 class Grid {
   constructor(scene, width, depth) {
@@ -37,7 +29,7 @@ class Grid {
     this.depth = depth;
     
     this.plusMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
-    this.cursorMaterial = new THREE.MeshBasicMaterial( {map: texture, transparent: true} );
+    this.cursorMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
     this.cursorGeometry = new THREE.BoxGeometry(0.9, 8, 0.9, 1);
     
     this.cursorGeometry.faceVertexUvs[0][4] = [new THREE.Vector2(1,1), new THREE.Vector2(1,1), new THREE.Vector2(1,1)];
