@@ -2,18 +2,21 @@ import store from "./state/store";
 import Renderer from "./view/renderer";
 import Grid from "./view/grid";
 
-const renderer = new Renderer(document.body, window.innerWidth, window.innerHeight);
-const grid = new Grid(renderer.scene);
+const initialState = store.getState();
 
-renderer.run();
+const mainRenderer = new Renderer(document.body, window.innerWidth, window.innerHeight);
+const grid = new Grid(mainRenderer.scene, initialState.getIn(["grid", "width"]), initialState.getIn(["grid", "depth"]));
+
+mainRenderer.run();
 
 window.addEventListener("resize", ()=>{
-  renderer.setDimensions(window.innerWidth, window.innerHeight);
-})
+  mainRenderer.setDimensions(window.innerWidth, window.innerHeight);
+});
+
+window.addEventListener("mousemove", evt => grid.updateCursor(evt, mainRenderer.camera));
 
 store.subscribe((...args)=>{
   const state = store.getState();
-  grid.update(state);
 });
 
 store.dispatch({type: "test"});
