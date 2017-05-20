@@ -1,24 +1,25 @@
 import * as THREE from "three";
+import whiteToBlackGradient from "./white-to-black-gradient";
 
-const wallGeometry = new THREE.BoxGeometry(1, 2, 1, 1);
-const wallMaterial = new THREE.MeshToonMaterial({
-  color: 0xffffff,
-  specular: 0xffffff,
-  shininess: 0.5
-});
+const floorGeometry = new THREE.BoxGeometry(1, 20, 1, 1);
+const floorMaterial = new THREE.MeshBasicMaterial({ map: whiteToBlackGradient });
+floorGeometry.faceVertexUvs[0][6] = [new THREE.Vector2(0,0), new THREE.Vector2(0,0), new THREE.Vector2(0,0)];
+floorGeometry.faceVertexUvs[0][7] = [new THREE.Vector2(0,0), new THREE.Vector2(0,0), new THREE.Vector2(0,0)];
 
-class Walls {
+
+class Floor {
   constructor(grid) {
     this.grid = grid;
     this.contents = {};
   }
   add({x,z}) {
     if (!this.get({x,z})) {
-      const mesh = new THREE.Mesh(wallGeometry, wallMaterial);
+      const mesh = new THREE.Mesh(floorGeometry, floorMaterial);
       this.contents[this.serialize({x,z})] = mesh;
       mesh.position.x = x;
       mesh.position.z = z;
-      mesh.position.y = 1;
+      mesh.position.y = -10;
+      mesh.rotation.x = Math.PI;
       this.grid.scene.add(mesh);
     }
   }
@@ -43,4 +44,4 @@ class Walls {
   }
 }
 
-export default Walls;
+export default Floor;

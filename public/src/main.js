@@ -1,12 +1,12 @@
 import View from "./view/view";
 import Cursor from "./view/cursor";
 import Grid from "./view/grid";
-import Walls from "./view/walls";
+import Floor from "./view/floor";
 
 const mainView = new View(document.body, window.innerWidth, window.innerHeight);
 const grid   = new Grid(mainView.scene, 32, 32);
 const cursor = new Cursor(grid);
-const walls  = new Walls(grid);
+const floor  = new Floor(grid);
 
 mainView.run();
 
@@ -23,7 +23,7 @@ window.addEventListener(
     const pos = grid.getMousePosition(evt, mainView.camera);
     cursor.update(pos);
     if (mouseIsDown && grid.isOnGrid(pos)) {
-      isAdding ? walls.add(pos) : walls.remove(pos);
+      isAdding ? floor.add(pos) : floor.remove(pos);
     }
   }
 );
@@ -31,10 +31,12 @@ window.addEventListener(
 window.addEventListener(
   "mousedown", 
   evt => {
-    mouseIsDown = true;
     const pos = grid.getMousePosition(evt, mainView.camera);
-    isAdding = !walls.get(pos);
-    isAdding ? walls.add(pos) : walls.remove(pos);
+    if (grid.isOnGrid(pos)) {
+      mouseIsDown = true;
+      isAdding = !floor.get(pos);
+      isAdding ? floor.add(pos) : floor.remove(pos);
+    }
   }
 );
 

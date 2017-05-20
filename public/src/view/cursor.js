@@ -1,31 +1,11 @@
 import * as THREE from "three";
-
-const size = 512;
-
-// create canvas
-const canvas = document.createElement('canvas');
-canvas.width = size;
-canvas.height = size;
-
-// get context
-const context = canvas.getContext('2d');
-
-// draw gradient
-context.rect(0, 0, size, size);
-const gradient = context.createLinearGradient(0, size, 0, 0);
-gradient.addColorStop(0, '#ffffff');
-gradient.addColorStop(1, 'transparent');
-context.fillStyle = gradient;
-context.fill();
-
-const texture = new THREE.Texture(canvas);
-texture.needsUpdate = true;
+import whiteGradient from "./white-gradient";
 
 class Cursor {
   constructor(grid) {
     this.grid = grid;
     
-    this.cursorMaterial = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    this.cursorMaterial = new THREE.MeshBasicMaterial({ map: whiteGradient, transparent: true });
     this.cursorGeometry = new THREE.BoxGeometry(1.2, 8, 1.2, 1);
     
     this.cursorGeometry.faceVertexUvs[0][4] = [new THREE.Vector2(1,1), new THREE.Vector2(1,1), new THREE.Vector2(1,1)];
