@@ -27,6 +27,9 @@ class Grid {
       [[x-(s/2),y,z], [x+(s/2),y,z]]
     ].map(([v1, v2])=>this.makeLine(v1,v2));
   }
+  getRoundedMousePosition(evt, camera) {
+    return this.round2dCoords(this.getMousePosition(evt, camera));
+  }
   getMousePosition(evt, camera) {
     const vector = new THREE.Vector3();
     vector.set(
@@ -36,7 +39,7 @@ class Grid {
     vector.unproject(camera);
     const dir = vector.sub(camera.position).normalize();
     const distance = - camera.position.y / dir.y;
-    return this.round2dCoords(camera.position.clone().add(dir.multiplyScalar(distance)));
+    return camera.position.clone().add(dir.multiplyScalar(distance));
   }
   round2dCoords({x, z}) {
     return {

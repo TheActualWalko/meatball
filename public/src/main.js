@@ -67,28 +67,39 @@ const updateSelection = ()=>{
   readout.innerHTML = `${w+1}' × ${d+1}'`;
 }
 
-window.addEventListener(
+let lastRoundedPos;
+
+mainView.element.addEventListener(
   "mousemove",
   evt => {
-    const pos = grid.getMousePosition(evt, mainView.camera);
-    cursor.update(pos);
-    if (mouseIsDown && grid.isOnGrid(pos)) {
-      //isAdding ? floor.add(pos) : floor.remove(pos);
-      selection.end = pos;
-      updateSelection();
+    const roundedPos = grid.getRoundedMousePosition(evt, mainView.camera);
+    lastRoundedPos = roundedPos;
+    if (cursor.tool === "FLOOR") {
+      cursor.update(roundedPos);
+      if (mouseIsDown && grid.isOnGrid(roundedPos)) {
+        selection.end = roundedPos;
+        updateSelection();
+      }
+    } else if (cursor.tool === "FURNITURE") {
+      const pos = grid.getMousePosition(evt, mainView.camera);
+      cursor.update(pos);
     }
   }
 );
 
-window.addEventListener(
+mainView.element.addEventListener(
   "mousedown", 
   evt => {
-    const pos = grid.getMousePosition(evt, mainView.camera);
-    if (grid.isOnGrid(pos)) {
-      mouseIsDown = true;
-      isAdding = !floor.get(pos);
-      //isAdding ? floor.add(pos) : floor.remove(pos);
-      selection.start = pos;
+    if (mouseIsDown) {
+      return;
+    }
+    if (cursor.tool === "FLOOR") {
+      const pos = grid.getRoundedMousePosition(evt, mainView.camera);
+      if (grid.isOnGrid(pos)) {
+        mouseIsDown = true;
+        isAdding = !floor.get(pos);
+        selection.start = pos;
+      }
     }
   }
 );
@@ -96,25 +107,38 @@ window.addEventListener(
 window.addEventListener(
   "mouseup", 
   evt => {
-    mouseIsDown = false;
-    if (mouseMoved) {
-      for (let x = Math.min(selection.start.x, selection.end.x); x <= Math.max(selection.start.x, selection.end.x); x ++) {
-        for (let z = Math.min(selection.start.z, selection.end.z); z <= Math.max(selection.start.z, selection.end.z); z ++) {
-          if (isAdding) {
-            floor.add({x,z});
-          } else {
-            floor.remove({x,z});
+    if (mouseIsDown) {
+      if (cursor.tool === "FLOOR") {
+        if (mouseMoved) {
+          for (let x = Math.min(selection.start.x, selection.end.x); x <= Math.max(selection.start.x, selection.end.x); x ++) {
+            for (let z = Math.min(selection.start.z, selection.end.z); z <= Math.max(selection.start.z, selection.end.z); z ++) {
+              if (isAdding) {
+                floor.add({x,z});
+              } else {
+                floor.remove({x,z});
+              }
+            } 
           }
-        } 
+        } else {
+          floor.toggle(grid.getRoundedMousePosition(evt, mainView.camera))
+        }
+        selection = {
+          start: {x: null, z: null},
+          end:   {x: null, z: null}
+        };
+        updateSelection();
       }
-    } else {
-      floor.toggle(grid.getMousePosition(evt, mainView.camera))
+      mouseIsDown = false;
+      mouseMoved = false;
     }
-    selection = {
-      start: {x: null, z: null},
-      end:   {x: null, z: null}
-    };
-    updateSelection();
-    mouseMoved = false;
   }
 );
+
+window.addEventListener("keydown", evt => {
+  if (evt.which === 32) {
+    cursor.swapTool();
+    if (lastRoundedPos) {
+      cursor.update(lastRoundedPos);
+    }
+  }
+});

@@ -12,7 +12,8 @@ class View {
 
     this.driver = new THREE.WebGLRenderer({ antialias: true });
     this.driver.setSize(width, height);
-    parentElement.appendChild(this.driver.domElement);
+    this.element = this.driver.domElement;
+    parentElement.appendChild(this.element);
   }
   setDimensions(width, height) {
     this.camera.aspect = width/height;
