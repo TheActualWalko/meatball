@@ -16,7 +16,6 @@ class Cursor {
     
     this.setTool("FLOOR");
     this.flashCursor();
-    console.log(this.cursor);
   }
   flashCursor() {
     requestAnimationFrame(()=>this.flashCursor());
