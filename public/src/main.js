@@ -2,6 +2,7 @@ import View from "./view/view";
 import Cursor from "./view/cursor";
 import Grid from "./view/grid";
 import Floor from "./view/floor";
+import getFurnitureDimensions from "./dimension";
 import * as THREE from "three";
 
 const mainView = new View(document.body, window.innerWidth, window.innerHeight);
@@ -134,11 +135,32 @@ window.addEventListener(
   }
 );
 
+let furnitureIndex = 0;
+const next = ()=>{
+  furnitureIndex ++;
+  if (furnitureIndex >= database.length) {
+    furnitureIndex = 0;
+  }
+}
+
+const prev = ()=>{
+  furnitureIndex --;
+  if (furnitureIndex < 0) {
+    furnitureIndex = database.length-1;
+  }
+}
+
 window.addEventListener("keydown", evt => {
   if (evt.which === 32) {
     cursor.swapTool();
     if (lastRoundedPos) {
       cursor.update(lastRoundedPos);
     }
+  } else if (evt.which === 38) { // up
+    next();
+    cursor.updateFurnitureSize(getFurnitureDimensions(database[furnitureIndex]))
+  } else if (evt.which === 40) { // down
+    prev();
+    cursor.updateFurnitureSize(getFurnitureDimensions(database[furnitureIndex]))
   }
 });
